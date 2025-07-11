@@ -1,0 +1,40 @@
+# 应用基础配置
+server:
+  port: 8082  # 业务模块端口
+
+spring:
+  application:
+    name: business-service  # 注册到Eureka的服务名称
+
+  # 数据源配置
+  datasource:
+    url: jdbc:mysql://localhost:3306/deer_business?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 858414
+
+  # Redis配置
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    database: 2
+
+# JWT配置
+jwt:
+  secret: deer-system-secret-key  # 密钥，生产环境应使用更复杂的值
+  expiration: 86400  # 令牌有效期（秒）24小时
+  header: Authorization  # 请求头名称
+  token-prefix: Bearer   # 令牌前缀
+
+# Eureka客户端配置
+eureka:
+  client:
+    service-url:
+      # 在 URL 中包含用户名和密码
+      defaultZone: http://Deer:Deer_small@localhost:8761/eureka/
+    registry-fetch-interval-seconds: 5  # 获取注册表间隔
+  instance:
+    instance-id: ${spring.application.name}:${server.port}  # 实例ID格式
+    prefer-ip-address: true  # 使用IP地址注册
+    lease-renewal-interval-in-seconds: 10  # 心跳间隔
+    lease-expiration-duration-in-seconds: 30  # 服务失效时间

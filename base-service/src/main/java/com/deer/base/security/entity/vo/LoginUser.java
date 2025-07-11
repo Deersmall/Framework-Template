@@ -1,0 +1,85 @@
+package com.deer.base.security.entity.vo;
+
+import com.alibaba.fastjson2.annotation.JSONField;
+import com.deer.base.security.entity.SysUser;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.stream.Collectors;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true) // 关键修复：忽略JSON中的未知字段
+public class LoginUser implements UserDetails {
+
+    private SysUser sysUser;
+
+    @Override
+    @JSONField(serialize = false)
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        return sysUser.getMenus()
+                .stream()
+                .map(menu -> new SimpleGrantedAuthority(menu.getPermission()))
+                .collect(Collectors.toList());
+
+    }
+
+    @Override
+    @JSONField(serialize = false)
+    public String getUsername() {
+        return sysUser.getUserName();
+    }
+
+    @Override
+    @JSONField(serialize = false)
+    public String getPassword() {
+        return sysUser.getPassword();
+    }
+
+    /**
+     * 账户是否未过期,过期无法验证
+     */
+    @Override
+    @JSONField(serialize = false)
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    /**
+     * 指定用户是否解锁,锁定的用户无法进行身份验证
+     * @return
+     */
+    @Override
+    @JSONField(serialize = false)
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    /**
+     * 是否是已过期的用户凭据(密码),过期的凭据防止认证
+     * @return
+     */
+    @Override
+    @JSONField(serialize = false)
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    /**
+     * 是否可用 ,禁用的用户不能身份验证
+     * @return
+     */
+    @Override
+    @JSONField(serialize = false)
+    public boolean isEnabled() {
+        return true;
+    }
+}
