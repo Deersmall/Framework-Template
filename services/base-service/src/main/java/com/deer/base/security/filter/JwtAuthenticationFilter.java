@@ -39,7 +39,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         
         // 从请求头获取令牌
         String token = request.getHeader(jwtUtils.getHeader());
-        token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZWVyIiwiY3JlYXRlZCI6MTc1MjIyODYzMDI2MywiZXhwIjoxNzUyMzE1MDMwfQ._CJgm7bn7VdVYMum9oOptx5kQX1IrNq_yC1gQXzsGw07hYFsm4WzHJndLvC3XBAmM86d5JazAm5SK-1YQGx0Gg";
+//        token = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJkZWVyIiwiY3JlYXRlZCI6MTc1MjIyODYzMDI2MywiZXhwIjoxNzUyMzE1MDMwfQ._CJgm7bn7VdVYMum9oOptx5kQX1IrNq_yC1gQXzsGw07hYFsm4WzHJndLvC3XBAmM86d5JazAm5SK-1YQGx0Gg";
 
 ;        if (token != null) {
             // 验证令牌

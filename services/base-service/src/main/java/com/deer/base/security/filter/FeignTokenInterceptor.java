@@ -16,7 +16,7 @@ public class FeignTokenInterceptor implements RequestInterceptor {
         LoginUser loginUser = SecurityUtils.getLoginUser();
 
         if (!ObjectUtils.isEmpty(loginUser)) {
-            template.header("Authorization", "Bearer " + loginUser.getToken());
+            template.header("Authorization", loginUser.getToken());
         }
     }
 
