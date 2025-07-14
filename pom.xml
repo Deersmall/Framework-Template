@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <!-- 项目基本信息 -->
+    <groupId>com.deer</groupId>
+    <artifactId>deer-service</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>  <!-- 父项目必须为pom类型 -->
+    <name>deer-service</name>
+    <description>Spring Security与Eureka注册中心学习项目</description>
+
+    <!-- 统一管理子模块 -->
+    <modules>
+        <!--  Eureka以及公共配置  -->
+        <module>services/base-service</module>
+
+        <!--  system系统模块  -->
+        <module>services/system-module</module>
+        <!--  system实体类模块  -->
+        <module>service_entities/system-entities</module>
+        <!--  system Api调用模块  -->
+        <module>service_api/system-api</module>
+
+
+        <!--  business业务模块  -->
+        <module>services/business-module</module>
+
+    </modules>
+
+    <!-- 属性配置（统一版本管理） -->
+    <properties>
+        <java.version>1.8</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>${java.version}</maven.compiler.source>
+        <maven.compiler.target>${java.version}</maven.compiler.target>
+
+        <!-- 依赖版本 -->
+        <spring-boot.version>2.7.18</spring-boot.version>  <!-- JDK8兼容的最新稳定版 -->
+        <spring-cloud.version>2021.0.8</spring-cloud.version>  <!-- 与Boot 2.7兼容 -->
+        <mybatis-plus.version>3.5.6</mybatis-plus.version>
+        <druid.version>1.2.1</druid.version>
+        <lombok.version>1.18.32</lombok.version>
+        <mysql.version>8.0.33</mysql.version>
+        <jwt.version>0.9.1</jwt.version>
+        <fastjson.version>2.0.8</fastjson.version>
+
+    </properties>
+
+    <!-- 依赖管理（子模块继承版本） -->
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Boot Starter 基础依赖 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Spring Cloud 依赖管理 -->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- MyBatis-Plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-boot-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <!-- Druid 连接池 -->
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>druid-spring-boot-starter</artifactId>
+                <version>${druid.version}</version>
+            </dependency>
+
+            <!-- MySQL 驱动 -->
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>${mysql.version}</version>
+            </dependency>
+
+            <!-- JWT Token生成与解析-->
+            <dependency>
+                <groupId>io.jsonwebtoken</groupId>
+                <artifactId>jjwt</artifactId>
+                <version>${jwt.version}</version>
+            </dependency>
+
+            <!-- 阿里JSON解析器 -->
+            <dependency>
+                <groupId>com.alibaba.fastjson2</groupId>
+                <artifactId>fastjson2</artifactId>
+                <version>${fastjson.version}</version>
+            </dependency>
+
+            <!-- Lombok -->
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <!-- 所有子模块的公共依赖 -->
+    <dependencies>
+
+    </dependencies>
+
+    <!-- 构建配置 -->
+    <build>
+        <plugins>
+            <!-- Maven 编译插件 -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${java.version}</source>
+                    <target>${java.version}</target>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+
+            <!-- Spring Boot Maven 插件 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring-boot.version}</version>
+                <configuration>
+                    <skip>true</skip>  <!-- 父项目不执行打包 -->
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
