@@ -1,0 +1,50 @@
+# 基础服务配置
+server:
+  port: 8761  # Eureka 默认端口
+
+spring:
+  application:
+    name: eureka-server
+  security:
+    user:
+      name: Deer
+      password: Deer_small
+
+# eureka注册中心配置
+eureka:
+  instance:
+    hostname: localhost  # 实例主机名
+    lease-renewal-interval-in-seconds: 10  # 客户端向服务端发送心跳的时间间隔（秒）
+    lease-expiration-duration-in-seconds: 30  # 服务端在收到最后一次心跳后等待的时间（秒）
+
+  client:
+    # 是否向注册中心注册自己（单机模式不需要注册自己）
+    register-with-eureka: false
+    # 是否从注册中心获取注册信息（单机模式不需要）
+    fetch-registry: false # false表示自己端就是注册中心，我的职责就是维护服务实例，并不需要去检索服务
+    # Eureka Server 服务端配置
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+  server:
+    enable-self-preservation: false  # 关闭自我保护模式（开发环境关闭，生产环境应开启）
+    eviction-interval-timer-in-ms: 5000  # 清理间隔（毫秒）
+
+# Actuator 端点配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics  # 开放健康检查和基本信息端点
+      base-path: /manage
+  endpoint:
+    health:
+      show-details: always
+      show-components: always
+    info:
+      enabled: true
+  health:
+    db:
+      enabled: false # 禁用数据源健康检查
+    diskspace:
+      threshold: 10MB

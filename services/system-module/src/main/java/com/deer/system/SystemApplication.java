@@ -8,8 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @EnableDiscoveryClient
 @ComponentScan(basePackages = {
-        "com.deer.base.security",// security安全配置
-        "com.deer.base.common",//   公共配置
+        "com.deer.framework",//   公共配置
         "com.deer.system",  //  system模块下所有包
 })
 public class SystemApplication {

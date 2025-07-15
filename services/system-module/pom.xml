@@ -24,8 +24,8 @@
         <!-- 依赖基础框架模块 -->
         <dependency>
             <groupId>com.deer</groupId>
-            <artifactId>base-service</artifactId>
-            <version>${project.version}</version>
+            <artifactId>framework-module</artifactId>
+            <version>1.0.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Eureka Client 依赖 -->

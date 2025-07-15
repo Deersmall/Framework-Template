@@ -1,11 +1,12 @@
 package com.deer.system.auth.service.impl;
 
-import com.deer.base.common.exception.AuthExceptions;
-import com.deer.base.common.utils.EncryptUtils;
-import com.deer.base.common.utils.RedisUtils;
-import com.deer.base.security.utils.JwtUtils;
+
 import com.deer.entities.system.SysUser;
 import com.deer.entities.system.vo.LoginUser;
+import com.deer.framework.exception.AuthExceptions;
+import com.deer.framework.utils.EncryptUtils;
+import com.deer.framework.utils.JwtUtils;
+import com.deer.framework.utils.RedisUtils;
 import com.deer.system.auth.service.IAuthService;
 import com.deer.system.auth.service.ISysUserService;
 import lombok.SneakyThrows;
@@ -22,7 +23,7 @@ import org.springframework.util.ObjectUtils;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.deer.base.common.constants.RedisConstants.LOGIN_USER;
+import static com.deer.framework.constants.RedisConstants.LOGIN_USER;
 
 @Service
 public class AuthServiceImpl implements IAuthService {

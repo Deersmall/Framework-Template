@@ -1,9 +1,9 @@
 package com.deer.system.auth.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.deer.entities.system.SysUser;
 import com.deer.system.auth.mapper.SysUserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,13 +27,8 @@ public class TestController {
      * @return 简单的响应消息
      */
     @PostMapping("/sysTestGetUser")
-//    @PreAuthorize("hasAuthority('test')")
+    @PreAuthorize("hasAuthority('test')")
     public SysUser sysTestGetUser(@RequestParam("userId") String userId) {
-
-        LambdaQueryWrapper<SysUser> lambdaQueryWrapper = new LambdaQueryWrapper<>();
-        lambdaQueryWrapper.eq(SysUser::getUserId,userId);
-
-        System.out.println(System.currentTimeMillis());
-        return sysUserMapper.selectOne(lambdaQueryWrapper);
+        return sysUserMapper.selectById(userId);
     }
 }

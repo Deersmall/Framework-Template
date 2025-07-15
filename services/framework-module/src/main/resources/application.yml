@@ -1,0 +1,77 @@
+# 公共配置模块
+server:
+  port: 8762  # Eureka端口  该服务不启动，所有不会注册到Eureka
+
+spring:
+  application:
+    name: framework-module
+  security:
+    user:
+      name: Deer
+      password: Deer_small
+
+  # 数据源配置 (具体值由使用模块覆盖)
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/deer?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 858414
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      # 连接池配置
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      # 监控配置
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        login-username: admin
+        login-password: admin
+      filter:
+        stat:
+          log-slow-sql: true
+          slow-sql-millis: 1000
+          merge-sql: true
+        wall:
+          config:
+            multi-statement-allow: true
+
+  # Redis配置 (具体值由使用模块覆盖)
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    database: 0
+    timeout: 3000
+    lettuce:
+      pool:
+        max-active: 20
+        max-wait: -1
+        max-idle: 10
+        min-idle: 0
+
+# MyBatis-Plus配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true  # 开启驼峰命名自动转换
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 日志输出
+  global-config:
+    db-config:
+      id-type: auto  # 主键生成策略
+      logic-delete-value: 1  # 逻辑已删除值
+      logic-not-delete-value: 0  # 逻辑未删除值
+
+# JWT 配置
+jwt:
+  secret: base-service-secret-key
+  expiration: 86400  # 24小时
+  header: Authorization
+  token-prefix: Bearer

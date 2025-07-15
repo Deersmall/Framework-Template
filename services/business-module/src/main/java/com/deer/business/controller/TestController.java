@@ -1,7 +1,7 @@
 package com.deer.business.controller;
 
 import com.deer.entities.system.SysUser;
-import com.deer.system.auth.ISystemApi;
+import com.deer.systemApi.auth.ISystemApi;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

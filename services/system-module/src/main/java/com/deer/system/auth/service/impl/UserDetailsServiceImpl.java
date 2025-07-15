@@ -1,10 +1,9 @@
 package com.deer.system.auth.service.impl;
 
-import com.deer.base.common.exception.AuthExceptions;
 import com.deer.entities.system.SysRole;
 import com.deer.entities.system.SysUser;
 import com.deer.entities.system.vo.LoginUser;
-import com.deer.system.auth.service.ISysUserService;
+import com.deer.framework.exception.AuthExceptions;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +18,7 @@ import java.util.Set;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private ISysUserService ISysUserService;
+    private com.deer.system.auth.service.ISysUserService ISysUserService;
 
     @SneakyThrows
     @Override

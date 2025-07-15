@@ -1,7 +1,7 @@
 package com.deer.system.auth.controller;
 
-import com.deer.base.common.result.CommonResult;
 import com.deer.entities.system.SysUser;
+import com.deer.framework.result.CommonResult;
 import com.deer.system.auth.service.IAuthService;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +28,7 @@ public class AuthController {
     @PostMapping("/login")
     public CommonResult login(@RequestBody SysUser sysUser) {
         return CommonResult.ok(authService.login(sysUser));
+//        return authService.login(sysUser);
     }
 
     /**

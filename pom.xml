@@ -14,8 +14,11 @@
 
     <!-- 统一管理子模块 -->
     <modules>
-        <!--  Eureka以及公共配置  -->
-        <module>services/base-service</module>
+        <!--  Eureka  -->
+        <module>services/eureka-server</module>
+        <!--  公共配置  -->
+        <module>services/framework-module</module>
+
 
         <!--  system系统模块  -->
         <module>services/system-module</module>

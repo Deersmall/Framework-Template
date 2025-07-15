@@ -1,6 +1,7 @@
 package com.deer.entities.system;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,6 +14,7 @@ import java.util.Set;
 public class SysUser {
 
     /** 用户Id  */
+    @TableId
     private String userId;
     /** 用户账号  */
     private String userName;

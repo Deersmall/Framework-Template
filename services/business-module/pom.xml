@@ -24,7 +24,7 @@
         <!-- 依赖基础框架模块 -->
         <dependency>
             <groupId>com.deer</groupId>
-            <artifactId>base-service</artifactId>
+            <artifactId>framework-module</artifactId>
             <version>${project.version}</version>
         </dependency>
 

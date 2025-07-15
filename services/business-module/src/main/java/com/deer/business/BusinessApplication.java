@@ -14,12 +14,11 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @EnableDiscoveryClient
 @ComponentScan(basePackages = {
-        "com.deer.base.security",// security安全配置
-        "com.deer.base.common",//   公共配置
+        "com.deer.framework",//   公共配置
         "com.deer.business",  //  business模块下所有包
 })
 @EnableFeignClients(basePackages = {
-        "com.deer.system",
+        "com.deer.systemApi",
 })
 public class BusinessApplication {
     public static void main(String[] args) {
