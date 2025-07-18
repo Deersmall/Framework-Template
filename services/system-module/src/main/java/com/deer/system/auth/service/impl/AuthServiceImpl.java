@@ -48,13 +48,12 @@ public class AuthServiceImpl implements IAuthService {
 
     @SneakyThrows
     @Override
-    public Map<String, String> login(SysUser sysUser) {
+    public Map<String, LoginUser> login(SysUser sysUser) {
 //        查询用户
         SysUser sysUserByName = ISysUserService.sysUserByUserName(sysUser.getUserName());
 
         //  密码加盐加密
         sysUser.setPassword(EncryptUtils.encrypt(sysUser.getPassword(), sysUserByName.getSalt()));
-
 
         // 1. 创建认证对象
         UsernamePasswordAuthenticationToken authenticationToken =
@@ -70,13 +69,15 @@ public class AuthServiceImpl implements IAuthService {
             if (ObjectUtils.isEmpty(authentication))
                 throw  new AuthExceptions(AuthExceptions.AUTHENTICATION_FAILED,"认证失败");
 
-            Map<String, String> map = new HashMap<>();
             LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+            Map<String, LoginUser> map = new HashMap<>();
+
 
             // 3. 生成JWT令牌
             String token = jwtUtils.generateToken(loginUser.getUsername());
-            map.put("token",token);
+
             loginUser.setToken(token);
+            map.put("loginUserInfo",loginUser);
 
             // 4. 将令牌存储到Redis
             redisUtils.set(LOGIN_USER + loginUser.getUsername(),loginUser, 300);
