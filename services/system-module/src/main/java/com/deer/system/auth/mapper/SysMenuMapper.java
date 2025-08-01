@@ -5,11 +5,10 @@ import com.deer.entities.system.SysMenu;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
-import java.util.Set;
 
 @Mapper
 public interface SysMenuMapper extends BaseMapper<SysMenu> {
 
-    Set<SysMenu> selectMenusByRoleIds(List<String> roleIds);
+    List<SysMenu> selectMenusByRoleIds(List<String> roleIds);
 
 }

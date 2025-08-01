@@ -69,6 +69,12 @@ mybatis-plus:
       logic-delete-value: 1  # 逻辑已删除值
       logic-not-delete-value: 0  # 逻辑未删除值
 
+# 日志配置
+logging:
+  level:
+    com.deer: debug
+    org.springframework: warn
+
 # JWT 配置
 jwt:
   secret: base-service-secret-key

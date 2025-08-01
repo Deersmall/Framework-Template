@@ -9,7 +9,6 @@ import com.deer.framework.utils.JwtUtils;
 import com.deer.framework.utils.RedisUtils;
 import com.deer.system.auth.service.IAuthService;
 import com.deer.system.auth.service.ISysUserService;
-import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -46,7 +45,6 @@ public class AuthServiceImpl implements IAuthService {
     @Autowired
     private ISysUserService ISysUserService;
 
-    @SneakyThrows
     @Override
     public Map<String, LoginUser> login(SysUser sysUser) {
 //        查询用户

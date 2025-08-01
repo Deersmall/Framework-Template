@@ -27,11 +27,10 @@ public class LoginUser implements UserDetails {
     @Override
     @JSONField(serialize = false)
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return sysUser.getMenus()
+        return sysUser.getPermissionList()
                 .stream()
-                .map(menu -> new SimpleGrantedAuthority(menu.getPermission()))
+                .map(permission -> new SimpleGrantedAuthority(permission))
                 .collect(Collectors.toList());
-
     }
 
     @Override

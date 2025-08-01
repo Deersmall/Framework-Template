@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,17 +44,36 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
 //        判断用户是否拥有角色
         if (CollectionUtils.isEmpty(roles)) throw new RuntimeException(userName + "账号还未分配角色");
 
-//        查询用户可用权限
-        Set<SysMenu> menus = iSysMenuService.getMenusByRoleIds(
+//        查询用户可用权限及菜单
+        Map<Integer, List<SysMenu>> menuMap = iSysMenuService.getMenusByRoleIds(
 //                角色Ids
                 roles.stream()
-                     .map(SysRole::getRoleId)
-                     .filter(StringUtils::isNotEmpty)
-                     .collect(Collectors.toList())
-        );
+                        .filter(x -> StringUtils.isNotEmpty(x.getRoleId()))
+                        .map(SysRole::getRoleId)
+                        .collect(Collectors.toList())
+        ).stream().collect(Collectors.groupingBy(SysMenu::getMenuType));
 
+//        组装目录菜单结构
+        List<SysMenu> directory = menuMap.get(0);
+        List<SysMenu> menu = menuMap.get(1);
+
+        directory.forEach(x -> {
+//            List<SysMenu> children = new ArrayList<>();
+            LinkedHashSet children = new LinkedHashSet();
+            menu.forEach(y -> {
+                if (x.getMenuId().equals(y.getParentId())){
+                    children.add(y);
+                }
+            });
+            x.setChildren(children);
+        });
+
+//        用户角色
         sysUser.setRoles(roles);
-        sysUser.setMenus(menus);
+//        用户权限
+        sysUser.setPermissionList(menuMap.get(2).stream().map(SysMenu::getPermission).collect(Collectors.toList()));
+//        用户菜单
+        sysUser.setMenus(directory);
 
         return sysUser;
     }

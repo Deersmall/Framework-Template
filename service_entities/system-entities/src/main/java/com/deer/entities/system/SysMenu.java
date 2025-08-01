@@ -1,10 +1,12 @@
 package com.deer.entities.system;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.LinkedHashSet;
 
 
 @Data
@@ -16,6 +18,10 @@ public class SysMenu implements Serializable {
     private String menuId;
     /** 菜单名称  */
     private String menuName;
+    /** 菜单类型（0目录 / 1菜单 / 2权限）  */
+    private Integer menuType;
+    /** 显示顺序  */
+    private Integer orderNum;
     /** 父菜单ID */
     private String parentId;
     /** 权限    */
@@ -24,6 +30,9 @@ public class SysMenu implements Serializable {
     private String path;
     /** 菜单状态  */
     private Integer status;
+
+    @TableField(exist = false)
+    private LinkedHashSet<SysMenu> children;
 
 
 }

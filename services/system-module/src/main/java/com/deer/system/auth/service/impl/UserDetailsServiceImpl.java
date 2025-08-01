@@ -26,7 +26,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //        查询用户
         SysUser sysUser = ISysUserService.sysUserByUserName(username);
         Set<SysRole> roles = sysUser.getRoles();
-        roles.add(new SysRole("iddd","test",0));
         sysUser.setRoles(roles);
 
         if (sysUser == null){

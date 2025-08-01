@@ -12,7 +12,8 @@
         <foreach item="roleId" collection="list" open="(" separator="," close=")">
             #{roleId}
         </foreach>
-        AND sm.`status` = 0;
+        AND sm.`status` = 0
+        ORDER BY sm.menu_type,sm.order_num
     </select>
 
 </mapper>

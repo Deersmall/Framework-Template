@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -31,8 +32,12 @@ public class SysUser {
     @TableField(exist = false)
     private Set<SysRole> roles;
 
+    /** 用户绑定角色    */
+    @TableField(exist = false)
+    private List<String> permissionList;
+
     /** 用户可用权限    */
     @TableField(exist = false)
-    private Set<SysMenu> menus;
+    private List<SysMenu> menus;
 
 }
