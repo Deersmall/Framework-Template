@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.deer.system.auth.mapper.SysMenuMapper">
+<mapper namespace="com.deer.system.sysMenu.mapper.SysMenuMapper">
 
     <select id="selectMenusByRoleIds" resultType="com.deer.entities.system.SysMenu">
         SELECT sm.* FROM role_menu rm

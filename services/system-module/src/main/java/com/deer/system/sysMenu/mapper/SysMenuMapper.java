@@ -1,4 +1,4 @@
-package com.deer.system.auth.mapper;
+package com.deer.system.sysMenu.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.deer.entities.system.SysMenu;

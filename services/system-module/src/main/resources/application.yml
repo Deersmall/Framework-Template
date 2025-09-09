@@ -18,13 +18,18 @@ spring:
     port: 6379
     database: 2  # 使用DB2存储令牌
 
+# 日志配置
+logging:
+  level:
+    com.deer: debug
+    com.baomidou.mybatisplus: debug
+
 # JWT配置
 jwt:
   secret: deer-system-secret-key  # 密钥，生产环境应使用更复杂的值
   expiration: 86400  # 令牌有效期（秒）24小时
   header: Authorization  # 请求头名称
   token-prefix: Bearer   # 令牌前缀
-
 
 # Eureka客户端配置
 eureka:

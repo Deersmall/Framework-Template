@@ -1,12 +1,13 @@
 package com.deer.entities.system;
 
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.LinkedHashSet;
+import java.util.List;
 
 
 @Data
@@ -15,6 +16,7 @@ import java.util.LinkedHashSet;
 public class SysMenu implements Serializable {
 
     /** 菜单ID  */
+    @TableId
     private String menuId;
     /** 菜单名称  */
     private String menuName;
@@ -32,7 +34,13 @@ public class SysMenu implements Serializable {
     private Integer status;
 
     @TableField(exist = false)
-    private LinkedHashSet<SysMenu> children;
+    private List<SysMenu> children;
+
+
+    // 添加子节点
+    public void addChild(SysMenu child) {
+        this.children.add(child);
+    }
 
 
 }

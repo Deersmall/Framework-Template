@@ -1,6 +1,6 @@
-# 公共配置模块
-server:
-  port: 8762  # Eureka端口  该服务不启动，所有不会注册到Eureka
+## 公共配置模块
+#server:
+#  port: 8762  # Eureka端口  该服务不启动，所有不会注册到Eureka
 
 spring:
   application:
@@ -58,22 +58,11 @@ spring:
         max-idle: 10
         min-idle: 0
 
-# MyBatis-Plus配置
-mybatis-plus:
-  configuration:
-    map-underscore-to-camel-case: true  # 开启驼峰命名自动转换
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 日志输出
-  global-config:
-    db-config:
-      id-type: auto  # 主键生成策略
-      logic-delete-value: 1  # 逻辑已删除值
-      logic-not-delete-value: 0  # 逻辑未删除值
-
 # 日志配置
 logging:
   level:
     com.deer: debug
-    org.springframework: warn
+    com.baomidou.mybatisplus: debug
 
 # JWT 配置
 jwt:
@@ -81,3 +70,17 @@ jwt:
   expiration: 86400  # 24小时
   header: Authorization
   token-prefix: Bearer
+
+# MyBatis-Plus配置
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.deer.entities.**
+  configuration:
+    map-underscore-to-camel-case: true  # 开启驼峰命名自动转换
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 改为标准输出
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl  # 日志输出
+  global-config:
+    db-config:
+      id-type: auto  # 主键生成策略
+      logic-delete-value: 1  # 逻辑已删除值
+      logic-not-delete-value: 0  # 逻辑未删除值

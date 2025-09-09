@@ -1,4 +1,4 @@
-package com.deer.system.auth.service;
+package com.deer.system.sysUser.service;
 
 
 import com.baomidou.mybatisplus.extension.service.IService;

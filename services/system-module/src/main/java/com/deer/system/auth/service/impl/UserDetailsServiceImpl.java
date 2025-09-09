@@ -18,7 +18,7 @@ import java.util.Set;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private com.deer.system.auth.service.ISysUserService ISysUserService;
+    private com.deer.system.sysUser.service.ISysUserService ISysUserService;
 
     @SneakyThrows
     @Override

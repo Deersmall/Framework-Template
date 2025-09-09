@@ -1,8 +1,8 @@
 package com.deer.framework.result;
 
+import com.baomidou.mybatisplus.core.toolkit.ObjectUtils;
 import com.deer.framework.Enum.ResultCode;
 import lombok.Data;
-import org.springframework.util.ObjectUtils;
 
 import java.io.Serializable;
 
@@ -44,19 +44,28 @@ public class CommonResult<T> implements Serializable {
     }
 
     public static  CommonResult ok(Object data) {
-        if (ObjectUtils.isEmpty(data)){
-            return new CommonResult(true);
-        }else {
-            return new CommonResult(true, data);
-        }
+        return ObjectUtils.isNotEmpty(data) ? new CommonResult(true, data) : new CommonResult(true);
     }
 
     public static  CommonResult no(Object data) {
-        if (ObjectUtils.isEmpty(data)) {
-            return new CommonResult(false);
-        }else {
-            return new CommonResult(false, data);
-        }
+        return ObjectUtils.isNotEmpty(data) ? new CommonResult(false, data) : new CommonResult(false);
+
+    }
+
+    public static  CommonResult toObjResult(Object data) {
+        return ObjectUtils.isNotEmpty(data) ? new CommonResult(true, data) : new CommonResult(false);
+    }
+
+    public static  CommonResult toBooleanResult(boolean isOk) {
+        return new CommonResult(isOk);
+    }
+
+    public static  CommonResult toBooleanResult(boolean isOk , Object data) {
+        return new CommonResult(isOk , data);
+    }
+
+    public static  CommonResult toIntResult(Integer rows) {
+        return rows != null && rows > 0 ? new CommonResult(true, rows) : new CommonResult(false);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.deer.system.auth.mapper;
+package com.deer.system.sysRole.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
