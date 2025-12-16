@@ -7,6 +7,7 @@ import com.deer.framework.exception.AuthExceptions;
 import com.deer.framework.utils.EncryptUtils;
 import com.deer.framework.utils.JwtUtils;
 import com.deer.framework.utils.RedisUtils;
+import com.deer.framework.utils.SecurityUtils;
 import com.deer.system.auth.service.IAuthService;
 import com.deer.system.sysUser.service.ISysUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -96,13 +97,8 @@ public class AuthServiceImpl implements IAuthService {
 
     @Override
     public boolean logout() {
-
-        //  获取登录认证对象
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        LoginUser loginUser = (LoginUser) authentication.getPrincipal();
-
         //  从Redis删除令牌
-        Boolean isDelete = redisUtils.delete(LOGIN_USER + loginUser.getUsername());
+        Boolean isDelete = redisUtils.delete(LOGIN_USER + SecurityUtils.getUsername());
 
         //  清除Security上下文
         SecurityContextHolder.clearContext();
