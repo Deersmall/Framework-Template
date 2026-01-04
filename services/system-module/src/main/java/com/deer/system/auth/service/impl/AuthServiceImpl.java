@@ -78,8 +78,8 @@ public class AuthServiceImpl implements IAuthService {
             loginUser.setToken(token);
             map.put("loginUserInfo",loginUser);
 
-            // 4. 将令牌存储到Redis
-            redisUtils.set(LOGIN_USER + loginUser.getUsername(),loginUser, 300);
+            // 4. 将令牌存储到Redis  设置有效30分钟
+            redisUtils.set(LOGIN_USER + loginUser.getUsername(),loginUser, 60 * 30);
 
             // 5. 返回认证结果
 //            return new AuthVO(token, "LoginUserToken", 30l);

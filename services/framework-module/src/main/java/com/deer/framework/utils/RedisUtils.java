@@ -48,4 +48,21 @@ public class RedisUtils {
     public Boolean hasKey(String key) {
         return redisTemplate.hasKey(key);
     }
+
+    /**
+     * 获取剩余过期时间（秒）
+     * -1表示永不过期,-2表示键不存在,其他正数表示剩余秒数
+     */
+    public Long getExpireSeconds(String key) {
+        return redisTemplate.getExpire(key);
+    }
+
+    /**
+     * 获取剩余过期时间（指定时间单位）
+     * 可以指定秒、毫秒、分钟等时间单位
+     */
+    public Long getExpire(String key, TimeUnit timeUnit) {
+        return redisTemplate.getExpire(key, timeUnit);
+    }
+
 }

@@ -60,6 +60,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         sendErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "登录认证已过期");
                         return;
                     }else {
+//                        验证通过，续签redis时长
+                        redisUtils.expire(LOGIN_USER + username, 60 * 30);
 
                         UsernamePasswordAuthenticationToken authentication =
                                 new UsernamePasswordAuthenticationToken(
