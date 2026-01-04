@@ -3,8 +3,6 @@ package com.deer.entities;
 import com.baomidou.mybatisplus.annotation.TableField;
 import lombok.Data;
 
-import java.util.Date;
-
 @Data
 public class BaseEntity {
 
@@ -19,12 +17,12 @@ public class BaseEntity {
 //    创建者
     private String createById;
 //    创建时间
-    private Date createTime;
+    private Long createTime;
 
 //    更新者
     private String updateById;
 //    更新时间
-    private Date updateTime;
+    private Long updateTime;
 
 
     /** 分页信息 */
@@ -34,8 +32,5 @@ public class BaseEntity {
 //    查询条数
     @TableField(exist = false)
     private Integer pageSize;
-//    总共查询条数
-    @TableField(exist = false)
-    private Integer totalCount;
 
 }

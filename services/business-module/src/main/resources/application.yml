@@ -14,9 +14,9 @@ spring:
 
   # Redis配置
   redis:
-    host: localhost
+    host: deer-small.xyz
     port: 6379
-    password:
+    password: deer85800
     database: 2
 
 # JWT配置

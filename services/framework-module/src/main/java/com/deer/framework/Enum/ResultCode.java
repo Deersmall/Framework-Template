@@ -14,10 +14,10 @@ import lombok.experimental.Accessors;
 public enum ResultCode {
 
     /* 成功 */
-    SUCCESS(200, "成功"),
+    SUCCESS(200, "请求成功"),
 
     /* 默认失败 */
-    COMMON_FAIL(999, "失败"),
+    COMMON_FAIL(999, "请求失败"),
 
     CUSTOM_FAIL(9999, "自定义错误"),
 

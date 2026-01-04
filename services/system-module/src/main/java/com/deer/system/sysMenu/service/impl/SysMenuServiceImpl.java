@@ -2,11 +2,15 @@ package com.deer.system.sysMenu.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.deer.entities.system.RoleMenu;
 import com.deer.entities.system.SysMenu;
+import com.deer.framework.exception.AuthExceptions;
+import com.deer.system.roleMenu.mapper.RoleMenuMapper;
 import com.deer.system.sysMenu.mapper.SysMenuMapper;
 import com.deer.system.sysMenu.service.ISysMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,6 +20,8 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
 
     @Autowired
     private SysMenuMapper sysMenuMapper;
+    @Autowired
+    private RoleMenuMapper roleMenuMapper;
 
     /**
      * 获取角色可用菜单
@@ -41,6 +47,21 @@ public class SysMenuServiceImpl extends ServiceImpl<SysMenuMapper, SysMenu> impl
         ).stream().collect(Collectors.groupingBy(SysMenu::getMenuType));
 
         return assemblyMenuTree(menusByType);
+    }
+
+    @Override
+    public int delMenu(List<String> ids) {
+
+        List<RoleMenu> roleMenus = roleMenuMapper.selectList(
+                new LambdaQueryWrapper<RoleMenu>().in(RoleMenu::getMenuId, ids)
+        );
+
+        if (!CollectionUtils.isEmpty(roleMenus)){
+//            throw new ServiceException(500,"改菜单或权限绑定了角色，请先解除绑定");
+            throw new AuthExceptions("改菜单或权限绑定了角色，请先解除绑定!!!");
+        }
+
+        return sysMenuMapper.deleteBatchIds(ids);
     }
 
 

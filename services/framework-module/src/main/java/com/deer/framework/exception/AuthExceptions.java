@@ -19,8 +19,7 @@ public class AuthExceptions extends RuntimeException{
     private Integer code;
     private String message;
 
-    public AuthExceptions(String message)
-    {
+    public AuthExceptions(String message) {
         this.message = message;
     }
 

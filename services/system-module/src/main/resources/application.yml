@@ -14,8 +14,9 @@ spring:
 
   # Redis配置
   redis:
-    host: localhost
+    host: deer-small.xyz
     port: 6379
+    password: deer85800
     database: 2  # 使用DB2存储令牌
 
 # 日志配置

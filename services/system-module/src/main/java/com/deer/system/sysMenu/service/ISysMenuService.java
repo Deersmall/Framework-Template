@@ -10,4 +10,6 @@ public interface ISysMenuService extends IService<SysMenu> {
     List<SysMenu> getMenusByRoleIds(List<String> roleIds);
 
     List<SysMenu> getMenuTree();
+
+    int delMenu(List<String> ids);
 }

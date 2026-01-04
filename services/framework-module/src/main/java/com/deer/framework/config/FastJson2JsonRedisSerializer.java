@@ -35,8 +35,7 @@ public class FastJson2JsonRedisSerializer<T> implements RedisSerializer<T>
         try {
             return JSON.toJSONString(t,
                     JSONWriter.Feature.WriteClassName,          // 写入类名（可选）
-                    JSONWriter.Feature.PrettyFormat,            // 格式化输出，使JSON可读
-                    JSONWriter.Feature.WriteMapNullValue        // 写入null值
+                    JSONWriter.Feature.PrettyFormat             // 格式化输出，使JSON可读
                     ).getBytes(DEFAULT_CHARSET);
         }catch (Exception ex){
             throw new SerializationException("无法进行序列化： " + ex.getMessage(), ex);

@@ -46,9 +46,9 @@ spring:
 
   # Redis配置 (具体值由使用模块覆盖)
   redis:
-    host: localhost
+    host: deer-small.xyz
     port: 6379
-    password:
+    password: deer85800
     database: 0
     timeout: 3000
     lettuce:
