@@ -81,6 +81,7 @@ mybatis-plus:
     log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl  # 日志输出
   global-config:
     db-config:
-      id-type: auto  # 主键生成策略
-      logic-delete-value: 1  # 逻辑已删除值
-      logic-not-delete-value: 0  # 逻辑未删除值
+      id-type: auto                 # 主键生成策略
+      logic-delete-field: status   # 逻辑删除字段名
+      logic-delete-value: 1         # 逻辑已删除值
+      logic-not-delete-value: 0     # 逻辑未删除值

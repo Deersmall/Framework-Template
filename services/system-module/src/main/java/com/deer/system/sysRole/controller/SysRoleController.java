@@ -1,6 +1,7 @@
 package com.deer.system.sysRole.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.CollectionUtils;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.deer.entities.system.RoleMenu;
@@ -106,20 +107,17 @@ public class SysRoleController {
 
     @PostMapping("/bindUser")
     @PreAuthorize("hasAuthority('role:assignAccounts')")
-    public CommonResult bindUser(@RequestBody SysRole sysRole) {
-        return CommonResult.ok(
-                iUserRoleService.list(new LambdaQueryWrapper<UserRole>().eq(UserRole::getRoleId, sysRole.getRoleId()))
-                        .stream().map(x -> x.getUserId()).collect(Collectors.toList())
-        );
+    public CommonResult bindUser(@RequestBody UserRole userRole) {
+        return CommonResult.ok(iUserRoleService.save(userRole));
     }
 
     @PostMapping("/unBindUser")
     @PreAuthorize("hasAuthority('role:assignAccounts')")
-    public CommonResult unBindUser(@RequestBody SysRole sysRole) {
-        return CommonResult.ok(
-                iUserRoleService.list(new LambdaQueryWrapper<UserRole>().eq(UserRole::getRoleId, sysRole.getRoleId()))
-                        .stream().map(x -> x.getUserId()).collect(Collectors.toList())
-        );
+    public CommonResult unBindUser(@RequestBody UserRole userRole) {
+        LambdaUpdateWrapper<UserRole> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.eq(UserRole::getUserId,userRole.getUserId()).eq(UserRole::getRoleId,userRole.getRoleId());
+
+        return CommonResult.ok(iUserRoleService.remove(lambdaUpdateWrapper));
     }
 
 }

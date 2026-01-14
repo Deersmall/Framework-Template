@@ -7,12 +7,6 @@ import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 
-/**
- * TODO
- *
- * @author CSD
- * @date 2022-07-28 14:16
- */
 public class AESUtils {
  
     //密钥 (需要前端和后端保持一致)十六位作为密钥

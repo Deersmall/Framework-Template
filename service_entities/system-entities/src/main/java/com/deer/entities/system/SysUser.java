@@ -26,7 +26,7 @@ public class SysUser extends BaseEntity {
     private String password;
     /** 用户加密盐  */
     private String salt;
-    /** 用户状态  */
+    /** 用户状态 -1删除，0正常，1禁用   */
     private Integer status;
 
     /** 用户绑定角色    */

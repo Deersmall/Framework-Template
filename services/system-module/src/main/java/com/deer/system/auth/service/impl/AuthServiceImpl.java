@@ -54,6 +54,9 @@ public class AuthServiceImpl implements IAuthService {
         //  密码加盐加密
         sysUser.setPassword(EncryptUtils.encrypt(sysUser.getPassword(), sysUserByName.getSalt()));
 
+//        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+//        String a =  passwordEncoder.encode(EncryptUtils.encrypt(sysUser.getPassword(), sysUserByName.getSalt()));
+
         // 1. 创建认证对象
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(

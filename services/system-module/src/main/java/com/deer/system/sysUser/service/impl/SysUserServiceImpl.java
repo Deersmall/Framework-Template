@@ -1,17 +1,22 @@
 package com.deer.system.sysUser.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.deer.entities.system.SysMenu;
 import com.deer.entities.system.SysRole;
 import com.deer.entities.system.SysUser;
-import com.deer.system.sysUser.mapper.SysUserMapper;
+import com.deer.framework.utils.EncryptUtils;
+import com.deer.framework.utils.SecurityUtils;
 import com.deer.system.sysMenu.service.ISysMenuService;
 import com.deer.system.sysRole.service.ISysRoleService;
+import com.deer.system.sysUser.mapper.SysUserMapper;
 import com.deer.system.sysUser.service.ISysUserService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
 
@@ -27,6 +32,31 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
     private ISysRoleService iSysRoleService;
     @Autowired
     private ISysMenuService iSysMenuService;
+
+    @Override
+    public IPage<SysUser> getUserList(SysUser sysUser) {
+
+        IPage<SysUser> page = new Page<>(sysUser.getPageNum(), sysUser.getPageSize());
+        LambdaQueryWrapper<SysUser> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+
+        if (com.baomidou.mybatisplus.core.toolkit.StringUtils.isNotEmpty(sysUser.getUserName())){
+            lambdaQueryWrapper.like(SysUser::getUserName,sysUser.getUserName());
+        }
+        if (com.baomidou.mybatisplus.core.toolkit.StringUtils.isNotEmpty(sysUser.getNickName())){
+            lambdaQueryWrapper.like(SysUser::getNickName, sysUser.getNickName());
+        }
+        if (com.baomidou.mybatisplus.core.toolkit.ObjectUtils.isNotEmpty(sysUser.getStatus())){
+            lambdaQueryWrapper.eq(SysUser::getStatus,sysUser.getStatus());
+        }else {
+            lambdaQueryWrapper.ne(SysUser::getStatus,-1);
+        }
+
+        IPage<SysUser> userPage = sysUserMapper.selectPage(page, lambdaQueryWrapper);
+        userPage.getRecords().forEach(user -> {
+        });
+
+        return userPage;
+    }
 
     @Override
     public SysUser sysUserByUserName(String userName) {
@@ -63,7 +93,63 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return sysUser;
     }
 
+    @Override
+    @Transactional
+    public int add(SysUser sysUser) {
+        SysUser user = sysUserMapper.selectOne(new LambdaQueryWrapper<SysUser>().eq(SysUser::getUserName, sysUser.getUserName()));
+        if (user != null){
+           throw new RuntimeException("账号已存在");
+        }
 
+        String uuid = UUID.randomUUID().toString();
+        String encryptPass = SecurityUtils.encryptPassword(EncryptUtils.encrypt("123456", uuid));
+
+        sysUser.setUserId(UUID.randomUUID().toString());
+        sysUser.setSalt(uuid);
+        sysUser.setPassword(encryptPass);
+
+        sysUser.setCreateById(SecurityUtils.getUserId());
+        sysUser.setCreateTime(System.currentTimeMillis());
+
+        return sysUserMapper.insert(sysUser);
+    }
+
+    @Override
+    @Transactional
+    public int upd(SysUser sysUser) {
+//        String uuid = StringUtils.isNotEmpty(sysUser.getSalt())?sysUser.getSalt():UUID.randomUUID().toString();
+//        String encryptPass = EncryptUtils.encrypt(sysUser.getPassword(), uuid);
+//
+//        sysUser.setSalt(uuid);
+//        sysUser.setPassword(encryptPass);
+        sysUser.setPassword(null);  //  不修改密码
+        sysUser.setUpdateById(SecurityUtils.getUserId());
+        sysUser.setUpdateTime(System.currentTimeMillis());
+
+        return sysUserMapper.updateById(sysUser);
+    }
+
+    @Override
+    @Transactional
+    public int updatePassword(SysUser sysUser) {
+        String uuid = StringUtils.isNotEmpty(sysUser.getSalt())?sysUser.getSalt():UUID.randomUUID().toString();
+        String encryptPass = SecurityUtils.encryptPassword(EncryptUtils.encrypt(sysUser.getPassword(), uuid));
+
+        sysUser.setSalt(uuid);
+        sysUser.setPassword(encryptPass);
+
+        sysUser.setUpdateById(SecurityUtils.getUserId());
+        sysUser.setUpdateTime(System.currentTimeMillis());
+
+        return sysUserMapper.updateById(sysUser);
+    }
+
+
+    /**
+     * 获取菜单树
+     * @param menusByType
+     * @return
+     */
     private List<SysMenu> getMenuTree(Map<Integer, List<SysMenu>> menusByType) {
 
 //        组装目录菜单结构
