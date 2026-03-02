@@ -1,5 +1,7 @@
 package com.deer.entities.system;
 
+import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.deer.entities.BaseEntity;
@@ -13,20 +15,30 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@ExcelIgnoreUnannotated
 public class SysUser extends BaseEntity {
 
     /** 用户Id  */
     @TableId
     private String userId;
     /** 用户账号  */
+    @ExcelProperty(value = {"用户账号"},index = 0)
     private String userName;
     /** 用户名称  */
+    @ExcelProperty(value = {"用户名称"},index = 1)
     private String nickName;
+    /** 生日日期  */
+    @ExcelProperty(value = {"生日日期"},index = 2)
+    private Long birthdayDate;
+    /** 用户年龄  */
+    @ExcelProperty(value = {"用户年龄"},index = 3)
+    private Integer userAge;
     /** 用户密码  */
     private String password;
     /** 用户加密盐  */
     private String salt;
     /** 用户状态 -1删除，0正常，1禁用   */
+    @ExcelProperty(value = {"用户状态"},index = 4)
     private Integer status;
 
     /** 用户绑定角色    */

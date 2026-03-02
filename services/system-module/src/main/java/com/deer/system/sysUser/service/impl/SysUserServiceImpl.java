@@ -14,12 +14,23 @@ import com.deer.system.sysRole.service.ISysRoleService;
 import com.deer.system.sysUser.mapper.SysUserMapper;
 import com.deer.system.sysUser.service.ISysUserService;
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.util.CellRangeAddress;
+import org.apache.poi.ss.util.CellRangeAddressList;
+import org.apache.poi.xssf.usermodel.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.ObjectUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -144,6 +155,223 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         return sysUserMapper.updateById(sysUser);
     }
 
+    @Override
+    public void userTemplateDownload(HttpServletResponse response) {
+//        Excel文件生成区域
+        ServletOutputStream outputStream = null;
+//        创建新的Excel工作簿（XSSFWorkbook用于.xlsx格式）
+        XSSFWorkbook workbook = new XSSFWorkbook();
+
+
+//        sheet工作表
+        XSSFSheet sheet1 = workbook.createSheet("用户信息导入模版");
+        XSSFSheet sheet2 = workbook.createSheet("下拉框数据sheet");
+
+//        设置列宽
+        sheet1.setDefaultColumnWidth((short) 25);
+        sheet2.setDefaultColumnWidth((short) 25);
+
+//        创建Excel工作簿样式
+        XSSFCellStyle style = workbook.createCellStyle();
+//        换行
+        style.setWrapText(true);
+
+        /** sheet1工作表 */
+
+        // region 标题行
+//        创建标题行（第1行）
+        XSSFRow row0 = sheet1.createRow(0);
+        row0.setHeightInPoints(30);                             //  行高
+        XSSFCell cell0 = row0.createCell(0);        //  创建单元格
+        cell0.setCellValue("用户导入模版");              //  单元格内容
+        cell0.setCellStyle(style);                            //  单元格样式
+//        合并单元格         firstRow起始行 , lastRow结束行 , firstCol起始列 , lastCol结束列
+        CellRangeAddress titleRow = new CellRangeAddress(0, 0, 0, 6);
+        sheet1.addMergedRegion(titleRow);
+        // endregion
+
+        // region 说明行
+        String str = "注意:\n" +
+                "用户信息请按规范填写；\n" +
+                "1.所有名称最大支持30个中文字符；\n" +
+                "2.带*为必填项";
+
+//        创建说明行（第2行）
+        XSSFRow row1 = sheet1.createRow(1);
+        row1.setHeightInPoints(80);                            //  行高
+        XSSFCell cell1 = row1.createCell(0);        //  创建单元格
+        cell1.setCellStyle(style);                             //  单元格样式
+        cell1.setCellValue(str);                              //  单元格内容
+//        合并单元格         firstRow起始行 , lastRow结束行 , firstCol起始列 , lastCol结束列
+        CellRangeAddress descRow = new CellRangeAddress(1, 1, 0, 6);
+        sheet1.addMergedRegion(descRow);
+        // endregion
+
+        // region 表头行
+//        创建表头行（第3行）
+        XSSFRow row2 = sheet1.createRow(2);
+        String[] th = new String[]{"用户账号*","用户名称*","生日日期","用户密码*","用户状态*"};
+//        行高
+        row2.setHeightInPoints(15);
+//        各单元格样式及内容
+        for (int i=0;i<th.length;i++){
+            XSSFRichTextString text = new XSSFRichTextString(th[i]);
+
+            XSSFCell cell = row2.createCell(i);     //  创建单元格
+            cell.setCellStyle(style);               //  单元格样式
+            cell.setCellValue(text);                //  单元格内容
+        }
+        // endregion
+
+        /** sheet2工作表 */
+//        创建表头行
+        XSSFRow sheet2Row = sheet2.createRow(0);
+        String[] sheet2Ts=new String[]{"原材料编号","原材料名称","原材料大类编码","原材料大类名称","原材料细类编码","原材料细类名称"};
+//        行高
+        sheet2Row.setHeightInPoints(15);
+//        各单元格样式及内容
+        for (int i=0;i<sheet2Ts.length;i++){
+            XSSFRichTextString text = new XSSFRichTextString(sheet2Ts[i]);
+
+            XSSFCell cell = sheet2Row.createCell(i);    //  创建单元格
+            cell.setCellStyle(style);                   //  单元格样式
+            cell.setCellValue(text);                    //  单元格内容
+
+        }
+
+        List<SysUser> sysUsers = sysUserMapper.selectList(new LambdaQueryWrapper<>());
+
+//        写入各列数据
+        for (int i = 0; i < sysUsers.size(); i++) {
+            XSSFRow row = sheet2.createRow(i+1);
+            row.createCell(0).setCellValue(sysUsers.get(i).getUserId());
+            row.createCell(1).setCellValue(sysUsers.get(i).getUserName());
+            row.createCell(2).setCellValue(sysUsers.get(i).getNickName());
+            row.createCell(3).setCellValue(sysUsers.get(i).getPassword());
+            row.createCell(4).setCellValue(sysUsers.get(i).getSalt());
+            row.createCell(5).setCellValue(sysUsers.get(i).getStatus());
+        }
+
+        /** 为sheet1的原材料名称列添加下拉框 */
+
+        // 获取数据验证帮助器
+        DataValidationHelper validationHelper = sheet1.getDataValidationHelper();
+
+        // 创建公式：引用sheet2的B列（原材料名称列），从第2行开始
+        // '原材料信息'!$B$2:$B$1000 表示引用sheet2的B2到B1000单元格
+        // 这里假设最多有999条原材料数据（从第2行到第1000行）
+        String formula = "'" + sheet2.getSheetName() + "'!$B$2:$B$1000";
+
+        // 如果需要动态引用所有有数据的行，可以使用以下公式（需要POI 5.2.0+支持）
+        // String dynamicFormula = "'" + sheet2.getSheetName() + "'!$B$2:$B$" + (rawMaterials.size() + 1);
+
+        // 创建约束
+        DataValidationConstraint constraint = validationHelper.createFormulaListConstraint(formula);
+
+        // 设置数据验证的范围：sheet1的E列（第5列，索引4），从第4行开始（索引3）到第1000行
+        CellRangeAddressList addressList = new CellRangeAddressList(
+                3, // 起始行（第4行，索引3）
+                1000, // 结束行（第1001行，索引1000）
+                7, // 起始列（E列，索引4）
+                7  // 结束列（E列，索引4）
+        );
+
+        // 创建数据验证
+        DataValidation validation = validationHelper.createValidation(constraint, addressList);
+
+        // 设置验证选项
+        validation.setShowErrorBox(true); // 显示错误框
+        validation.setErrorStyle(DataValidation.ErrorStyle.STOP); // 错误样式：停止
+        validation.createErrorBox("输入错误", "请从下拉列表中选择有效的原材料名称"); // 错误提示
+
+        validation.setShowPromptBox(true);  // 显示提示框
+        validation.createPromptBox("选择提示", "请从下拉列表中选择原材料名称");
+
+        // 将验证应用到工作表
+        sheet1.addValidationData(validation);
+
+        String[] list13=new String[]{"启用","禁用"};
+        DataValidationConstraint constraint2 = validationHelper.createExplicitListConstraint(list13);
+        CellRangeAddressList addressList2 = new CellRangeAddressList(3,1003,4,4);
+        DataValidation validation2 = validationHelper.createValidation(constraint2, addressList2);
+        validation2.setShowErrorBox(true); // 显示错误框
+        validation2.setErrorStyle(DataValidation.ErrorStyle.STOP); // 错误样式：停止
+        validation2.createErrorBox("输入错误", "请选择'启用'或'禁用'"); // 错误提示
+
+        validation2.setShowPromptBox(true);  // 显示提示框
+        validation2.createPromptBox("状态选择", "请选择用户状态：启用或禁用");
+
+        sheet1.addValidationData(validation2);
+
+
+        /** 文件输出部分 */
+        try {
+            response.setContentType("application/octet-stream");
+            response.setHeader("content-type", "application/octet-stream;charset=UTF-8");
+            response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+            outputStream = response.getOutputStream();
+            workbook.write(outputStream);
+            outputStream.flush();
+            workbook.close();
+        } catch (IOException e) {
+            log.error(e.getMessage(),e);
+        } finally {
+            try {
+                if(outputStream != null) {
+                    outputStream.close();
+                }
+            } catch (IOException e) {
+                log.error(e.getMessage(),e);
+            }
+        }
+
+        //endregion
+    }
+
+    @Override
+    @Transactional
+    public void userImport(MultipartFile file) {
+        try {
+//             获取上传文件的输入流
+            InputStream inputStream = file.getInputStream();
+
+//             创建一个工作簿（Workbook）对象
+            Workbook workbook = new XSSFWorkbook(inputStream);
+
+//             获取第一个Sheet页
+            Sheet sheet = workbook.getSheetAt(0);
+
+//            将读取的数据写入此集合
+            List<SysUser> sysUserList = new ArrayList<>();
+
+//            遍历每行 获取Excel数据写入 sysUserList
+            for (Row row : sheet) {
+//                从第四行开始读取
+                if (row.getRowNum() >= 3){
+//                    行数据处理
+                    SysUser sysUser = handleRowData(row);
+                    sysUserList.add(sysUser);
+                }
+            }
+
+//            向数据库确认数据是否存在
+            List<SysUser> existsUser = sysUserMapper.selectList(new LambdaQueryWrapper<SysUser>().in(
+                            SysUser::getUserName, sysUserList.stream().map(SysUser::getUserName).collect(Collectors.toList())));
+
+//            数据库存在该账号 抛出异常 账号+message
+            if (!CollectionUtils.isEmpty(existsUser)){
+                List<String> existsUserName = existsUser.stream().map(SysUser::getUserName).collect(Collectors.toList());
+                throw new RuntimeException(existsUserName + "账号已存在");
+            }
+
+            sysUserMapper.batchInsert(sysUserList);
+
+            workbook.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * 获取菜单树
@@ -186,6 +414,39 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
                 .stream()
                 .sorted(Comparator.comparingInt(SysMenu::getOrderNum))
                 .collect(Collectors.toList());
+    }
+
+    private SysUser handleRowData(Row row) {
+        SysUser sysUser = new SysUser();
+
+//                    必填非空判断
+        if (StringUtils.isEmpty(row.getCell(0).getStringCellValue())) throw new RuntimeException("用户账号字段必填");
+        if (StringUtils.isEmpty(row.getCell(1).getStringCellValue())) throw new RuntimeException("用户名称字段必填");
+        if (StringUtils.isEmpty(row.getCell(4).getStringCellValue())) throw new RuntimeException("用户密码字段必填");
+
+//                    处理数据 写入实体类
+
+        String salt = UUID.randomUUID().toString();
+        String encryptPass = SecurityUtils.encryptPassword(EncryptUtils.encrypt(row.getCell(3).getStringCellValue(), salt));
+
+
+        sysUser.setUserId(UUID.randomUUID().toString());
+        sysUser.setUserName(row.getCell(0).getStringCellValue());
+        sysUser.setNickName(row.getCell(1).getStringCellValue());
+        sysUser.setPassword(encryptPass);
+        sysUser.setSalt(salt);
+        sysUser.setStatus(row.getCell(4).getStringCellValue().equals("启用") ? 0 : 1);
+        sysUser.setCreateById(SecurityUtils.getUserId());
+        sysUser.setCreateTime(System.currentTimeMillis());
+
+
+        if (!ObjectUtils.isEmpty(row.getCell(2).getDateCellValue())) {
+            sysUser.setBirthdayDate(row.getCell(2).getDateCellValue().getTime());
+            sysUser.setUserAge(LocalDateTime.now().getYear() - row.getCell(2).getLocalDateTimeCellValue().getYear());
+        }
+
+
+        return sysUser;
     }
 }
 

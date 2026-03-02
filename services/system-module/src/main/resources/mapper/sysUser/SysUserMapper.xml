@@ -4,8 +4,40 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.deer.system.sysUser.mapper.SysUserMapper">
 
-<!--    <select id="sysUserByUserName" resultType="com.deer.system.auth.entity.SysUser">-->
-<!--        SELECT * FROM `sys_user` ${ew.customSqlSegment}-->
-<!--    </select>-->
+    <insert id="batchInsert">
+        <foreach collection="list" item="item" separator=";">
+            insert into sys_user
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="item.userId != null and item.userId != ''">user_id,</if>
+                <if test="item.userName != null and item.userName != ''">user_name,</if>
+                <if test="item.nickName != null and item.nickName != ''">nick_name,</if>
+                <if test="item.birthdayDate != null and item.birthdayDate != ''">birthday_date,</if>
+                <if test="item.userAge != null">user_age,</if>
+                <if test="item.password != null and item.password != ''">`password`,</if>
+                <if test="item.salt != null and item.salt != ''">salt,</if>
+                <if test="item.status != null">`status`,</if>
+                <if test="item.remark != null and item.remark != ''">remark,</if>
+                <if test="item.createById != null and item.createById != ''">create_by_id,</if>
+                <if test="item.createTime != null">create_time,</if>
+                <if test="item.updateById != null and item.updateById != ''">update_by_id,</if>
+                <if test="item.updateTime != null">update_time,</if>
+            </trim>
+            <trim prefix="values (" suffix=")" suffixOverrides=",">
+                <if test="item.userId != null and item.userId != ''">#{item.userId},</if>
+                <if test="item.userName != null and item.userName != ''">#{item.userName},</if>
+                <if test="item.nickName != null and item.nickName != ''">#{item.nickName},</if>
+                <if test="item.birthdayDate != null and item.birthdayDate != ''">#{item.birthdayDate},</if>
+                <if test="item.userAge != null">#{item.userAge},</if>
+                <if test="item.password != null and item.password != ''">#{item.password},</if>
+                <if test="item.salt != null and item.salt != ''">#{item.salt},</if>
+                <if test="item.status != null">#{item.status},</if>
+                <if test="item.remark != null and item.remark != ''">#{item.remark},</if>
+                <if test="item.createById != null and item.createById != ''">#{item.createById},</if>
+                <if test="item.createTime != null">#{item.createTime},</if>
+                <if test="item.updateById != null and item.updateById != ''">#{item.updateById},</if>
+                <if test="item.updateTime != null">#{item.updateTime},</if>
+            </trim>
+        </foreach>
+    </insert>
 
 </mapper>

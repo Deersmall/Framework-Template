@@ -1,6 +1,7 @@
 # 系统用户认证模块
 server:
   port: 8081  # 户认证模块端口
+  error.include-message: always  # 异常消息暴露   never：从不包含消息（默认）  |  always：总是包含  |  on-param：根据请求参数 trace 决定
 
 spring:
   application:
@@ -8,7 +9,7 @@ spring:
 
   # 数据源配置
   datasource:
-    url: jdbc:mysql://localhost:3306/deer_system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    url: jdbc:mysql://localhost:3306/deer_system?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai&allowMultiQueries=true
     username: root
     password: 858414
 

@@ -4,6 +4,9 @@ package com.deer.system.sysUser.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.deer.entities.system.SysUser;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
 
 public interface ISysUserService extends IService<SysUser> {
 
@@ -16,4 +19,8 @@ public interface ISysUserService extends IService<SysUser> {
     int upd(SysUser sysUser);
 
     int updatePassword(SysUser sysUser);
+
+    void userTemplateDownload(HttpServletResponse response);
+
+    void userImport(MultipartFile file);
 }
